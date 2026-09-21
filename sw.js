@@ -1,63 +1,73 @@
 // ============================================================
 // SERVICE WORKER - BÍBLIA SILVA XVI
 // ============================================================
-const VERSION = "v1";
-const CACHE_NAME = `biblia-silva-xvi-${VERSION}`;
+const VERSION = "v4";
+const CACHE_NAME = "biblia-silva-xvi-" + VERSION;
 
-// Arquivos essenciais para funcionamento offline
+// Só cacheia imagens e o manifest (NUNCA o HTML)
 const APP_STATIC_RESOURCES = [
-  "./",
-  "./index.html"
+  "./manifest.json"
 ];
 
-// Instala o Service Worker e faz o cache dos arquivos
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_STATIC_RESOURCES);
+      return cache.addAll(APP_STATIC_RESOURCES).catch(() => {});
     })
   );
-  self.skipWaiting();
 });
 
-// Ativa e limpa caches antigos
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => {
+        if (key !== CACHE_NAME) return caches.delete(key);
+      }))
+    )
   );
   self.clients.claim();
 });
 
-// Intercepta requisições e serve do cache quando offline
 self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+
+  // Ignora esquemas não suportados
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
+  // NUNCA intercepta chamadas para API (Apps Script, Supabase, Gemini, Imgur, Bible-API)
+  if (
+    url.hostname.includes("script.google.com") ||
+    url.hostname.includes("googleusercontent.com") ||
+    url.hostname.includes("supabase.co") ||
+    url.hostname.includes("imgur.com") ||
+    url.hostname.includes("googleapis.com") ||
+    url.hostname.includes("bible-api.com")
+  ) {
+    return; // navegador lida direto, sem cache
+  }
+
+  // Para HTML → sempre da rede (network-only)
+  if (
+    event.request.destination === "document" ||
+    url.pathname.endsWith(".html") ||
+    url.pathname.endsWith("/")
+  ) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Para o resto → cache-first
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Se encontrou no cache, retorna
-      if (response) {
-        return response;
-      }
-      // Senão, busca da rede
-      return fetch(event.request).then((networkResponse) => {
-        // Se a resposta for válida, guarda no cache
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== "basic") {
-          return networkResponse;
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== "basic") {
+          return response;
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return networkResponse;
-      }).catch(() => {
-        // Se falhar (offline), retorna o index.html como fallback
-        return caches.match("./index.html");
+        const copia = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copia)).catch(() => {});
+        return response;
       });
     })
   );
