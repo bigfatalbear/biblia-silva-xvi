@@ -333,19 +333,46 @@
 (function () {
   'use strict';
 
-  // URL do Apps Script (backend)
   var URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxUMlzCKvl8Lz2APQtrBZg3BJoRA9agCfhNY5j4E6sdxeIbDxWCBznnaYsard9faQrEIg/exec";
 
+  // ============================================================
+  // PONTE PARA O APPS SCRIPT (com timeout de 25s)
+  // ============================================================
   function chamarAPI(nomeFuncao) {
     var args = Array.prototype.slice.call(arguments, 1);
+
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () { controller.abort(); }, 25000);
+
     return fetch(URL_APPS_SCRIPT, {
       method: 'POST',
       mode: 'cors',
       redirect: 'follow',
+      cache: 'no-store',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ funcao: nomeFuncao, args: args })
+      body: JSON.stringify({ funcao: nomeFuncao, args: args }),
+      signal: controller.signal
     })
-    .then(function (r) { return r.json(); });
+    .then(function (r) {
+      clearTimeout(timeoutId);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function (texto) {
+      try {
+        return JSON.parse(texto);
+      } catch (e) {
+        console.error('Resposta não-JSON do servidor:', texto.substring(0, 300));
+        throw new Error('Resposta inválida do servidor. Tente novamente.');
+      }
+    })
+    .catch(function (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        throw new Error('Timeout: o servidor demorou demais. Verifique sua conexão.');
+      }
+      throw err;
+    });
   }
 
   var usuario = null;
@@ -1166,7 +1193,7 @@
       var s = localStorage.getItem('biblia_user');
       if (s) { var u = JSON.parse(s); if (u && u.id) entrar(u); }
     } catch (e) {}
-    console.log('✅ BÍBLIA - SILVA XVI carregada (GitHub Pages + API)');
+    console.log('✅ BÍBLIA - SILVA XVI carregada (GitHub Pages + API REST)');
   });
 })();
 </script>
