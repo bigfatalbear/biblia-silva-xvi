@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>BÍBLIA - SILVA XVI</title>
 
-<!-- ============ PWA ============ -->
 <meta name="theme-color" content="#1e293b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -334,6 +333,21 @@
 (function () {
   'use strict';
 
+  // URL do Apps Script (backend)
+  var URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxUMlzCKvl8Lz2APQtrBZg3BJoRA9agCfhNY5j4E6sdxeIbDxWCBznnaYsard9faQrEIg/exec";
+
+  function chamarAPI(nomeFuncao) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return fetch(URL_APPS_SCRIPT, {
+      method: 'POST',
+      mode: 'cors',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ funcao: nomeFuncao, args: args })
+    })
+    .then(function (r) { return r.json(); });
+  }
+
   var usuario = null;
   var fonte = 18;
   var carregando = false;
@@ -483,18 +497,17 @@
     if (!email || !senha) return alert('Preencha e-mail e senha.');
     $('btn-login').disabled = true; $('btn-login').innerText = 'Entrando...';
     loader('Autenticando...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('loginUsuario', email, senha)
+      .then(function (res) {
         $('btn-login').disabled = false; $('btn-login').innerText = 'Entrar';
         unloader();
         if (res && res.status === 'sucesso') entrar(res.usuario);
         else alert((res && res.mensagem) || 'Erro ao logar.');
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         $('btn-login').disabled = false; $('btn-login').innerText = 'Entrar';
         unloader(); alert('Erro: ' + err.message);
-      })
-      .loginUsuario(email, senha);
+      });
   }
 
   function fazerCadastro() {
@@ -505,32 +518,30 @@
     if (senha.length < 6) return alert('A senha deve ter pelo menos 6 caracteres.');
     $('btn-cadastro').disabled = true; $('btn-cadastro').innerText = 'Cadastrando...';
     loader('Criando sua conta...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('cadastrarUsuario', nome, email, senha)
+      .then(function (res) {
         $('btn-cadastro').disabled = false; $('btn-cadastro').innerText = 'Cadastrar e Entrar';
         unloader();
         if (res && res.status === 'sucesso') { alert('Cadastro realizado!'); entrar(res.usuario); }
         else alert((res && res.mensagem) || 'Erro no cadastro.');
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         $('btn-cadastro').disabled = false; $('btn-cadastro').innerText = 'Cadastrar e Entrar';
         unloader(); alert('Erro: ' + err.message);
-      })
-      .cadastrarUsuario(nome, email, senha);
+      });
   }
 
   function solicitarCodigo() {
     var email = $('rec-email').value.trim();
     if (!email) return alert('Informe seu e-mail.');
     loader('Enviando código...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('solicitarRecuperacao', email)
+      .then(function (res) {
         unloader();
         alert(res.mensagem);
         if (res.status === 'sucesso') show('rec-parte-2');
       })
-      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-      .solicitarRecuperacao(email);
+      .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
   }
 
   function redefinirSenha() {
@@ -539,14 +550,13 @@
     var nova = $('rec-nova-senha').value;
     if (!codigo || !nova) return alert('Preencha o código e a nova senha.');
     loader('Redefinindo...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('redefinirSenha', email, codigo, nova)
+      .then(function (res) {
         unloader();
         if (res.status === 'sucesso') { alert('✅ ' + res.mensagem); voltarLogin(); }
         else alert(res.mensagem);
       })
-      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-      .redefinirSenha(email, codigo, nova);
+      .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
   }
 
   function entrar(u) {
@@ -684,8 +694,8 @@
     var cap = parseInt($('sel-cap').value, 10);
     var ref = LIVROS[idx][0] + ' ' + cap;
     loader('Marcando ' + ref + '...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('salvarMarcacao', usuario.id, LIVROS[idx][0], cap, 1)
+      .then(function (res) {
         unloader();
         if (res.status === 'sucesso') {
           alert('🔖 Marcado: ' + ref);
@@ -693,8 +703,7 @@
           carregarVersiculosMarcados();
         } else alert('❌ ' + (res.mensagem || 'Erro'));
       })
-      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-      .salvarMarcacao(usuario.id, LIVROS[idx][0], cap, 1);
+      .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
   }
 
   function marcarVersiculoEspecifico(livro, capitulo, versiculo) {
@@ -703,12 +712,12 @@
     var nota = prompt('🔖 Marcar ' + ref + '\n\nQuer adicionar uma anotação? (opcional)');
     if (nota === null) return;
     loader('Marcando ' + ref + '...');
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('salvarMarcacao', usuario.id, livro, capitulo, versiculo)
+      .then(function (res) {
         unloader();
         if (res.status === 'sucesso') {
           if (nota && nota.trim()) {
-            google.script.run.salvarAnotacao(usuario.id, livro, capitulo, versiculo, nota.trim());
+            chamarAPI('salvarAnotacao', usuario.id, livro, capitulo, versiculo, nota.trim());
           }
           carregarVersiculosMarcados();
           carregarUltimaMarcacao();
@@ -716,8 +725,7 @@
           carregarNotas();
         } else alert('❌ ' + (res.mensagem || 'Erro'));
       })
-      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-      .salvarMarcacao(usuario.id, livro, capitulo, versiculo);
+      .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
   }
 
   function atualizarMarcacoesVisuais() {
@@ -725,8 +733,8 @@
     var idx = parseInt($('sel-livro').value, 10);
     var cap = parseInt($('sel-cap').value, 10);
     var livro = LIVROS[idx][0];
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('listarProgresso', usuario.id)
+      .then(function (res) {
         if (!res || res.status !== 'sucesso' || !res.dados) return;
         var marcados = {};
         res.dados.forEach(function (m) {
@@ -740,13 +748,13 @@
           if (marcados[v]) el.classList.add('ja-marcado');
         });
       })
-      .listarProgresso(usuario.id);
+      .catch(function () {});
   }
 
   function carregarUltimaMarcacao() {
     if (!usuario) return;
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('ultimaMarcacao', usuario.id)
+      .then(function (res) {
         var cont = $('onde-parei-container');
         if (!res || res.status !== 'sucesso' || !res.dados) {
           cont.innerHTML = '<div class="marcador-vazio">Você ainda não marcou nenhum ponto de leitura.</div>';
@@ -772,8 +780,8 @@
           $('btn-del-ultima').onclick = function () {
             if (!confirm('Excluir a marcação ' + ref + '?')) return;
             loader('Excluindo...');
-            google.script.run
-              .withSuccessHandler(function (r) {
+            chamarAPI('excluirMarcacao', m.id)
+              .then(function (r) {
                 unloader();
                 if (r.status === 'sucesso') {
                   carregarUltimaMarcacao();
@@ -781,15 +789,13 @@
                   atualizarMarcacoesVisuais();
                 } else alert('Erro: ' + (r.mensagem || ''));
               })
-              .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-              .excluirMarcacao(m.id);
+              .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
           };
         }, 0);
       })
-      .withFailureHandler(function () {
+      .catch(function () {
         $('onde-parei-container').innerHTML = '<div class="marcador-vazio">Erro ao carregar marcação.</div>';
-      })
-      .ultimaMarcacao(usuario.id);
+      });
   }
 
   function irParaMarcacao(m) {
@@ -812,8 +818,8 @@
     if (!usuario) return;
     var lista = $('lista-marcados');
     lista.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">Carregando...</div>';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('listarProgresso', usuario.id)
+      .then(function (res) {
         if (!res || res.status !== 'sucesso' || !res.dados || res.dados.length === 0) {
           lista.innerHTML = '<div class="marcador-vazio">Nenhum versículo marcado ainda.</div>';
           return;
@@ -841,8 +847,8 @@
             var ref = m.livro + ' ' + m.capitulo + (m.versiculo ? ':' + m.versiculo : '');
             if (!confirm('Excluir a marcação ' + ref + '?')) return;
             loader('Excluindo...');
-            google.script.run
-              .withSuccessHandler(function (r) {
+            chamarAPI('excluirMarcacao', m.id)
+              .then(function (r) {
                 unloader();
                 if (r.status === 'sucesso') {
                   carregarVersiculosMarcados();
@@ -850,16 +856,14 @@
                   atualizarMarcacoesVisuais();
                 } else alert('Erro: ' + (r.mensagem || ''));
               })
-              .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
-              .excluirMarcacao(m.id);
+              .catch(function (err) { unloader(); alert('Erro: ' + err.message); });
           };
           lista.appendChild(div);
         });
       })
-      .withFailureHandler(function () {
+      .catch(function () {
         lista.innerHTML = '<div class="marcador-vazio">Erro ao carregar.</div>';
-      })
-      .listarProgresso(usuario.id);
+      });
   }
 
   function preencherSelectLivrosEdit() {
@@ -881,14 +885,14 @@
     $('edit-versiculo').value = m.versiculo || '';
     $('edit-nota').value = '';
     $('modal-editar').style.display = 'flex';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('listarAnotacoesFiltradas', usuario.id, m.livro, m.capitulo, m.versiculo)
+      .then(function (res) {
         if (res.status === 'sucesso' && res.dados && res.dados.length > 0) {
           $('edit-nota').value = res.dados[0].texto || '';
           marcacaoEmEdicao._anotacaoId = res.dados[0].id;
         }
       })
-      .listarAnotacoesFiltradas(usuario.id, m.livro, m.capitulo, m.versiculo);
+      .catch(function () {});
   }
 
   function fecharModalEditar() {
@@ -905,8 +909,8 @@
     if (!livro || !cap) return alert('Livro e capítulo são obrigatórios.');
     var btn = $('edit-salvar');
     btn.disabled = true; btn.innerText = 'Salvando...';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('editarMarcacao', marcacaoEmEdicao.id, livro, cap, vers)
+      .then(function (res) {
         if (res.status !== 'sucesso') {
           btn.disabled = false; btn.innerText = 'Salvar alterações';
           return alert('Erro ao salvar: ' + (res.mensagem || ''));
@@ -920,25 +924,21 @@
           carregarNotas();
           alert('✅ Marcação atualizada!');
         };
-        var lidarNota = function () {
-          if (!nota) {
-            if (marcacaoEmEdicao._anotacaoId) google.script.run.excluirAnotacao(marcacaoEmEdicao._anotacaoId);
-            finalizar();
-            return;
-          }
-          if (marcacaoEmEdicao._anotacaoId) {
-            google.script.run.withSuccessHandler(finalizar).editarAnotacao(marcacaoEmEdicao._anotacaoId, nota);
-          } else {
-            google.script.run.withSuccessHandler(finalizar).salvarAnotacao(usuario.id, livro, cap, vers, nota);
-          }
-        };
-        lidarNota();
+        if (!nota) {
+          if (marcacaoEmEdicao._anotacaoId) chamarAPI('excluirAnotacao', marcacaoEmEdicao._anotacaoId);
+          finalizar();
+          return;
+        }
+        if (marcacaoEmEdicao._anotacaoId) {
+          chamarAPI('editarAnotacao', marcacaoEmEdicao._anotacaoId, nota).then(finalizar);
+        } else {
+          chamarAPI('salvarAnotacao', usuario.id, livro, cap, vers, nota).then(finalizar);
+        }
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         btn.disabled = false; btn.innerText = 'Salvar alterações';
         alert('Erro: ' + err.message);
-      })
-      .editarMarcacao(marcacaoEmEdicao.id, livro, cap, vers);
+      });
   }
 
   function salvarNota() {
@@ -949,17 +949,16 @@
     var cap = parseInt($('sel-cap').value, 10);
     var btn = $('btn-salvar-nota');
     btn.disabled = true; btn.innerText = 'Salvando...';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('salvarAnotacao', usuario.id, LIVROS[idx][0], cap, 1, txt)
+      .then(function (res) {
         btn.disabled = false; btn.innerText = 'Salvar Anotação';
         if (res.status === 'sucesso') { $('txt-nota').value = ''; carregarNotas(); }
         else alert('Erro: ' + (res.mensagem || ''));
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         btn.disabled = false; btn.innerText = 'Salvar Anotação';
         alert('Erro: ' + err.message);
-      })
-      .salvarAnotacao(usuario.id, LIVROS[idx][0], cap, 1, txt);
+      });
   }
 
   function carregarNotas() {
@@ -967,8 +966,8 @@
     var idx = parseInt($('sel-livro').value, 10);
     var cap = parseInt($('sel-cap').value, 10);
     $('notas').innerHTML = '';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('listarAnotacoes', usuario.id)
+      .then(function (res) {
         if (!res || res.status !== 'sucesso' || !res.dados) return;
         res.dados
           .filter(function (a) { return a.livro === LIVROS[idx][0] && parseInt(a.capitulo, 10) === cap; })
@@ -979,7 +978,7 @@
             $('notas').appendChild(d);
           });
       })
-      .listarAnotacoes(usuario.id);
+      .catch(function () {});
   }
 
   function perguntaIA() {
@@ -992,17 +991,16 @@
     hist.insertBefore(bloco, hist.firstChild);
     $('ia-pergunta').value = '';
     $('btn-ia').disabled = true; $('btn-ia').innerText = 'Consultando...';
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('consultarIA', p)
+      .then(function (res) {
         $('btn-ia').disabled = false; $('btn-ia').innerText = 'Perguntar à IA';
         if (res.status === 'sucesso') bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>' + markdownParaHtml(res.resposta);
         else bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>⚠️ Erro: ' + escapeHtml(res.resposta);
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         $('btn-ia').disabled = false; $('btn-ia').innerText = 'Perguntar à IA';
         bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>⚠️ Erro: ' + escapeHtml(err.message);
-      })
-      .consultarIA(p);
+      });
   }
 
   function lidarSelecao() {
@@ -1076,17 +1074,16 @@
       while (n && !(n.classList && n.classList.contains('verse'))) n = n.parentNode;
       if (n) contexto = n.innerText;
     }
-    google.script.run
-      .withSuccessHandler(function (res) {
+    chamarAPI('explicarTermo', termo, contexto)
+      .then(function (res) {
         $('dict-ia').disabled = false;
         if (res.status === 'sucesso') $('dict-conteudo').innerHTML = '<div>' + markdownParaHtml(res.resposta) + '</div>';
         else $('dict-conteudo').innerHTML = '⚠️ Erro: ' + escapeHtml(res.resposta);
       })
-      .withFailureHandler(function (err) {
+      .catch(function (err) {
         $('dict-ia').disabled = false;
         $('dict-conteudo').innerHTML = '⚠️ Erro: ' + escapeHtml(err.message);
-      })
-      .explicarTermo(termo, contexto);
+      });
   }
 
   function abrirModalMarcar() {
@@ -1111,28 +1108,23 @@
     btn.disabled = true; btn.innerText = 'Salvando...';
     var versiculos = [];
     for (var i = vIni; i <= vFim; i++) versiculos.push(i);
-    var pendentes = versiculos.length;
-    var erros = [];
-    function finalizar() {
-      pendentes--;
-      if (pendentes > 0) return;
+
+    Promise.all(versiculos.map(function (v) {
+      return chamarAPI('salvarMarcacao', usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, v);
+    }))
+    .then(function () {
       btn.disabled = false; btn.innerText = 'Salvar marcação';
-      if (erros.length) alert('Erros: ' + erros.join(', '));
-      else {
-        fecharModalMarcar();
-        carregarVersiculosMarcados();
-        carregarUltimaMarcacao();
-        atualizarMarcacoesVisuais();
-        if (nota) google.script.run.salvarAnotacao(usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, vIni, nota);
-        var ref = selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + (vIni === vFim ? vIni : vIni + '-' + vFim);
-        alert('🔖 Marcado: ' + ref);
-      }
-    }
-    versiculos.forEach(function (v) {
-      google.script.run
-        .withSuccessHandler(function (res) { if (res.status !== 'sucesso') erros.push('v.' + v); finalizar(); })
-        .withFailureHandler(function () { erros.push('v.' + v); finalizar(); })
-        .salvarMarcacao(usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, v);
+      fecharModalMarcar();
+      carregarVersiculosMarcados();
+      carregarUltimaMarcacao();
+      atualizarMarcacoesVisuais();
+      if (nota) chamarAPI('salvarAnotacao', usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, vIni, nota);
+      var ref = selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + (vIni === vFim ? vIni : vIni + '-' + vFim);
+      alert('🔖 Marcado: ' + ref);
+    })
+    .catch(function (err) {
+      btn.disabled = false; btn.innerText = 'Salvar marcação';
+      alert('Erro: ' + err.message);
     });
   }
 
@@ -1174,14 +1166,11 @@
       var s = localStorage.getItem('biblia_user');
       if (s) { var u = JSON.parse(s); if (u && u.id) entrar(u); }
     } catch (e) {}
-    console.log('✅ BÍBLIA - SILVA XVI carregada (GitHub Pages + PWA)');
+    console.log('✅ BÍBLIA - SILVA XVI carregada (GitHub Pages + API)');
   });
 })();
 </script>
 
-<!-- ============================================================
-     REGISTRO DO SERVICE WORKER (para funcionar offline no GitHub Pages)
-     ============================================================ -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
