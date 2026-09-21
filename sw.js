@@ -4,7 +4,6 @@
 const VERSION = "v4";
 const CACHE_NAME = "biblia-silva-xvi-" + VERSION;
 
-// Só cacheia imagens e o manifest (NUNCA o HTML)
 const APP_STATIC_RESOURCES = [
   "./manifest.json"
 ];
@@ -32,10 +31,10 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // Ignora esquemas não suportados
+  // Ignora esquemas não suportados (extensões, chrome://, etc)
   if (url.protocol !== "http:" && url.protocol !== "https:") return;
 
-  // NUNCA intercepta chamadas para API (Apps Script, Supabase, Gemini, Imgur, Bible-API)
+  // NUNCA intercepta chamadas para API
   if (
     url.hostname.includes("script.google.com") ||
     url.hostname.includes("googleusercontent.com") ||
@@ -44,7 +43,7 @@ self.addEventListener("fetch", (event) => {
     url.hostname.includes("googleapis.com") ||
     url.hostname.includes("bible-api.com")
   ) {
-    return; // navegador lida direto, sem cache
+    return;
   }
 
   // Para HTML → sempre da rede (network-only)
