@@ -1,0 +1,26 @@
+{
+  "name": "BÍBLIA - SILVA XVI",
+  "short_name": "Bíblia Silva XVI",
+  "description": "A Palavra viva na família Silva",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/KPZRqZq.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.imgur.com/KPZRqZq.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
