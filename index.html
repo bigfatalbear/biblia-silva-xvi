@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BÍBLIA - SILVA XVI</title>
+
+<!-- ============ PWA ============ -->
+<meta name="theme-color" content="#1e293b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bíblia Silva XVI">
+<meta name="description" content="A Palavra viva na família Silva">
+<link rel="icon" type="image/jpeg" href="https://i.imgur.com/KPZRqZq.jpeg">
+<link rel="apple-touch-icon" href="https://i.imgur.com/KPZRqZq.jpeg">
+
+<script>
+  var MANIFEST_PWA = {
+    "name": "BÍBLIA - SILVA XVI",
+    "short_name": "Bíblia Silva XVI",
+    "description": "A Palavra viva na família Silva",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#0f172a",
+    "theme_color": "#1e293b",
+    "lang": "pt-BR",
+    "icons": [
+      { "src": "https://i.imgur.com/KPZRqZq.jpeg", "sizes": "192x192", "type": "image/jpeg", "purpose": "any" },
+      { "src": "https://i.imgur.com/KPZRqZq.jpeg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any maskable" }
+    ]
+  };
+  (function () {
+    try {
+      var blob = new Blob([JSON.stringify(MANIFEST_PWA)], { type: 'application/manifest+json' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = url;
+      document.head.appendChild(link);
+    } catch (e) { console.warn('PWA manifest falhou:', e); }
+  })();
+</script>
+
+<style>
+  :root {
+    --bg-page: #f1f5f9; --bg-panel: #ffffff; --bg-topbar: #1e293b;
+    --bg-input: #ffffff; --bg-hover: #f8fafc; --bg-note: #eff6ff;
+    --bg-ia: #f5f3ff; --bg-marcador-1: #fef3c7; --bg-marcador-2: #fde68a;
+    --bg-vazio: #f1f5f9;
+    --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8;
+    --text-topbar: #ffffff; --text-versiculo-num: #2563eb;
+    --text-marcador: #78350f; --text-marcador-label: #92400e;
+    --border: #e2e8f0; --border-input: #cbd5e1; --border-note: #3b82f6;
+    --border-ia: #7c3aed; --border-marcador: #f59e0b;
+    --accent-blue: #2563eb; --accent-blue-hover: #1d4ed8;
+    --accent-green: #059669; --accent-green-hover: #047857;
+    --accent-purple: #7c3aed; --accent-amber: #f59e0b; --accent-red: #dc2626;
+    --shadow-panel: 0 4px 12px rgba(0,0,0,.05);
+    --shadow-card: 0 20px 40px rgba(0,0,0,.2);
+    --shadow-input-focus: 0 0 0 2px rgba(59,130,246,.35);
+  }
+  [data-tema="escuro"] {
+    --bg-page: #0f172a; --bg-panel: #1e293b; --bg-topbar: #020617;
+    --bg-input: #334155; --bg-hover: #334155; --bg-note: #1e3a5f;
+    --bg-ia: #2e1065; --bg-marcador-1: #78350f; --bg-marcador-2: #92400e;
+    --bg-vazio: #334155;
+    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+    --text-topbar: #f8fafc; --text-versiculo-num: #60a5fa;
+    --text-marcador: #fef3c7; --text-marcador-label: #fde68a;
+    --border: #334155; --border-input: #475569; --border-note: #60a5fa;
+    --border-ia: #a78bfa; --border-marcador: #fbbf24;
+    --shadow-panel: 0 4px 12px rgba(0,0,0,.3);
+    --shadow-card: 0 20px 40px rgba(0,0,0,.5);
+    --shadow-input-focus: 0 0 0 2px rgba(96,165,250,.5);
+  }
+  * { box-sizing: border-box; }
+  html, body { transition: background-color .2s, color .2s; }
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg-page); color: var(--text-primary); }
+  .hidden { display: none !important; }
+  .center { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: var(--bg-topbar); position: relative; }
+  .card { background: var(--bg-panel); padding: 32px; border-radius: 12px; box-shadow: var(--shadow-card); max-width: 460px; width: 100%; color: var(--text-primary); }
+  h1 { text-align: center; margin: 0 0 4px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: 22px; }
+  h1 .logo-titulo { width: 48px; height: 48px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+  .sub { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 18px; }
+  .descricao-app { background: rgba(37, 99, 235, .08); border-left: 3px solid var(--accent-blue); border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+  [data-tema="escuro"] .descricao-app { background: rgba(96, 165, 250, .12); }
+  .descricao-app strong { color: var(--text-primary); }
+  .descricao-app ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .descricao-app li { margin: 2px 0; }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab { flex: 1; padding: 10px; background: none; border: none; font-weight: bold; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; font-size: 15px; }
+  .tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 4px; color: var(--text-primary); }
+  input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-input); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-input); color: var(--text-primary); }
+  input:focus, select:focus, textarea:focus { outline: none; box-shadow: var(--shadow-input-focus); border-color: var(--accent-blue); }
+  textarea { resize: vertical; }
+  .btn { padding: 12px; border: none; border-radius: 8px; color: #fff; font-weight: bold; font-size: 15px; cursor: pointer; }
+  .btn-blue { background: var(--accent-blue); } .btn-blue:hover { background: var(--accent-blue-hover); }
+  .btn-green { background: var(--accent-green); } .btn-green:hover { background: var(--accent-green-hover); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; }
+  .full { width: 100%; margin-top: 16px; }
+  .link-suave { background: none; border: none; color: var(--accent-blue); cursor: pointer; font-size: 13px; margin-top: 12px; text-decoration: underline; }
+  .rodape-suporte { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+  .rodape-suporte a { color: var(--accent-green); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+  .rodape-suporte a:hover { text-decoration: underline; }
+  .btn-tema-flutuante { position: absolute; top: 16px; right: 16px; background: var(--bg-panel); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 18px; box-shadow: var(--shadow-panel); }
+  .btn-tema-flutuante:hover { background: var(--bg-hover); }
+  .topbar { background: var(--bg-topbar); color: var(--text-topbar); padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; position: sticky; top: 0; z-index: 10; }
+  .topbar .logo-topbar { width: 32px; height: 32px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.35); margin-right: 4px; }
+  .topbar strong { display: flex; align-items: center; gap: 6px; font-size: 15px; }
+  .topbar select { width: auto; background: var(--bg-input); color: var(--text-primary); border-color: var(--border); }
+  .topbar button { padding: 6px 12px; border: none; border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px; }
+  .topbar button:disabled { opacity: .6; cursor: not-allowed; }
+  .btn-tema { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-input); color: var(--text-primary); cursor: pointer; font-size: 13px; }
+  .btn-tema:hover { background: var(--bg-hover); }
+  .layout { max-width: 1100px; margin: 20px auto; display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 0 16px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .panel { background: var(--bg-panel); padding: 20px; border-radius: 12px; box-shadow: var(--shadow-panel); color: var(--text-primary); transition: background-color .2s, color .2s; }
+  .panel h3 { margin: 0 0 12px; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+  .verse { position: relative; padding: 4px 40px 4px 4px; border-radius: 4px; line-height: 1.7; transition: background .15s; cursor: text; }
+  .verse:hover { background: var(--bg-hover); }
+  .verse .n { color: var(--text-versiculo-num); font-weight: bold; font-size: .75em; vertical-align: super; margin-right: 6px; }
+  .verse.ja-marcado { border-left: 3px solid var(--accent-amber); padding-left: 8px; }
+  .verse .btn-marcar-verso { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: var(--accent-amber); color: #fff; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 13px; opacity: 0; transition: opacity .15s; display: flex; align-items: center; justify-content: center; padding: 0; }
+  .verse:hover .btn-marcar-verso { opacity: 1; }
+  .verse .btn-marcar-verso:hover { background: #d97706; transform: translateY(-50%) scale(1.1); }
+  .marcador-card { background: linear-gradient(135deg, var(--bg-marcador-1) 0%, var(--bg-marcador-2) 100%); border-left: 4px solid var(--border-marcador); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; color: var(--text-marcador); transition: transform .15s; }
+  .marcador-card:hover { transform: translateX(2px); }
+  .marcador-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-marcador-label); font-weight: 700; }
+  .marcador-card .ref { font-size: 18px; font-weight: 700; margin: 4px 0; color: var(--text-marcador); }
+  .marcador-card .ref-small { font-size: 12px; opacity: .85; }
+  .marcador-card .data { font-size: 10px; opacity: .8; margin-top: 2px; }
+  .marcador-vazio { padding: 14px; background: var(--bg-vazio); border-radius: 8px; font-size: 13px; color: var(--text-secondary); font-style: italic; text-align: center; }
+  .btn-ir { margin-top: 8px; padding: 6px 12px; background: var(--accent-amber); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; }
+  .btn-ir:hover { background: #d97706; }
+  .btn-acao-mini { background: rgba(255,255,255,.4); border: none; border-radius: 6px; padding: 4px 6px; cursor: pointer; font-size: 12px; }
+  .btn-acao-mini:hover { background: rgba(255,255,255,.7); }
+  .note { background: var(--bg-note); border-left: 4px solid var(--border-note); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 13px; color: var(--text-primary); }
+  .note .meta { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+  .ia-resposta { background: var(--bg-ia); border-left: 4px solid var(--border-ia); padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-top: 10px; color: var(--text-primary); }
+  .ia-resposta .pergunta { font-weight: bold; color: var(--accent-purple); display: block; margin-bottom: 6px; font-size: 12px; }
+  .ia-hist { max-height: 400px; overflow-y: auto; margin-top: 10px; }
+  .loader { position: fixed; inset: 0; background: rgba(15,23,42,.75); color: #fff; display: none; align-items: center; justify-content: center; z-index: 9999; font-weight: bold; }
+  .loader.on { display: flex; }
+  .btn-nav { padding: 8px 16px; border: 1px solid var(--border); background: var(--bg-panel); color: var(--text-primary); border-radius: 8px; cursor: pointer; }
+  .btn-nav:hover { background: var(--bg-hover); }
+  .btn-nav:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-marcar { background: var(--bg-marcador-1); color: var(--text-marcador); border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+  .btn-marcar:hover { background: var(--bg-marcador-2); }
+  #modal-marcar, #modal-editar { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 9999; align-items: center; justify-content: center; padding: 16px; }
+  #modal-marcar > div, #modal-editar > div { background: var(--bg-panel); color: var(--text-primary); padding: 24px; border-radius: 12px; max-width: 460px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,.4); max-height: 90vh; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<div id="loader" class="loader"><div>⏳ <span id="loader-txt">Carregando...</span></div></div>
+
+<div id="tela-auth" class="center">
+  <button id="btn-tema-auth" class="btn-tema-flutuante" title="Alternar tema">🌙</button>
+  <div class="card">
+    <h1>
+      <img src="https://i.imgur.com/KPZRqZq.jpeg" alt="Logo" class="logo-titulo">
+      BÍBLIA - SILVA XVI
+    </h1>
+    <p class="sub">A Palavra viva na família Silva</p>
+
+    <div class="descricao-app">
+      <strong>Um só lugar para estudar a Bíblia:</strong>
+      <ul>
+        <li>📚 66 livros, 3 versões, leitura em voz alta</li>
+        <li>🔖 Marque onde parou e versículos favoritos</li>
+        <li>📝 Anote o que Deus falou com você</li>
+        <li>🔍 Pesquise o significado de qualquer palavra</li>
+        <li>✨ Tire dúvidas com o Assistente IA Teológico</li>
+        <li>🌙 Tema claro ou escuro, do seu jeito</li>
+      </ul>
+    </div>
+
+    <div class="tabs">
+      <button id="tab-login" type="button" class="tab active">Entrar</button>
+      <button id="tab-cadastro" type="button" class="tab">Criar Conta</button>
+    </div>
+
+    <div id="form-login">
+      <label>E-mail</label>
+      <input type="email" id="login-email" placeholder="seuemail@exemplo.com">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="••••••••">
+      <button id="btn-login" type="button" class="btn btn-blue full">Entrar</button>
+      <div style="text-align:center;">
+        <button id="btn-esqueci" type="button" class="link-suave">Esqueci minha senha</button>
+      </div>
+    </div>
+
+    <div id="form-cadastro" class="hidden">
+      <label>Nome Completo</label>
+      <input type="text" id="cad-nome" placeholder="Seu Nome">
+      <label>E-mail</label>
+      <input type="email" id="cad-email" placeholder="seuemail@exemplo.com">
+      <label>Senha (mín. 6 caracteres)</label>
+      <input type="password" id="cad-senha" placeholder="••••••••">
+      <button id="btn-cadastro" type="button" class="btn btn-green full">Cadastrar e Entrar</button>
+    </div>
+
+    <div id="form-recuperacao" class="hidden">
+      <label>E-mail cadastrado</label>
+      <input type="email" id="rec-email" placeholder="seuemail@exemplo.com">
+      <button id="btn-solicitar-codigo" type="button" class="btn btn-blue full">Enviar código</button>
+      <div id="rec-parte-2" class="hidden" style="margin-top:16px; border-top:1px solid var(--border); padding-top:16px;">
+        <p style="font-size:13px; color:var(--text-secondary); margin:0 0 8px;">Digite o código recebido por e-mail:</p>
+        <label>Código</label>
+        <input type="text" id="rec-codigo" maxlength="6" placeholder="000000" style="text-align:center; font-size:20px; letter-spacing:8px;">
+        <label>Nova senha (mín. 6 caracteres)</label>
+        <input type="password" id="rec-nova-senha" placeholder="••••••••">
+        <button id="btn-redefinir" type="button" class="btn btn-green full">Redefinir Senha</button>
+      </div>
+      <div style="text-align:center;">
+        <button id="btn-voltar-login" type="button" class="link-suave">← Voltar para o login</button>
+      </div>
+    </div>
+
+    <div class="rodape-suporte">
+      Precisa de ajuda? Fale com o suporte:<br>
+      <a href="https://wa.me/5571999383974?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20a%20B%C3%ADblia%20Silva%20XVI" target="_blank" rel="noopener">
+        💬 WhatsApp (71) 99938-3974
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <div class="topbar">
+    <strong>
+      <img src="https://i.imgur.com/KPZRqZq.jpeg" alt="Logo" class="logo-topbar">
+      BÍBLIA - SILVA XVI
+    </strong>
+    <select id="sel-livro"></select>
+    <select id="sel-cap"></select>
+    <select id="sel-versao">
+      <option value="almeida">Almeida</option>
+      <option value="kjv">King James</option>
+      <option value="web">World English</option>
+    </select>
+    <button id="btn-a-mais" style="background:#475569;">A+</button>
+    <button id="btn-a-menos" style="background:#475569;">A-</button>
+    <button id="btn-audio" style="background:#059669;">🔊 Ouvir</button>
+    <button id="btn-tema" class="btn-tema" title="Alternar tema">🌙</button>
+    <button id="btn-sair" style="background:#dc2626;">Sair</button>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h2 id="titulo" style="margin:0;">Carregando...</h2>
+            <span id="user-info" style="font-size:12px; color:var(--text-secondary);"></span>
+          </div>
+          <button id="btn-marcar" type="button" class="btn-marcar">🔖 Marcar capítulo</button>
+        </div>
+        <p style="font-size:11px; color:var(--text-muted); margin:0 0 10px; font-style:italic;">
+          💡 Dica: passe o mouse sobre um versículo e clique em 🔖 para marcar. Ou selecione qualquer texto para pesquisar.
+        </p>
+        <div id="conteudo" style="line-height:1.7; font-size:18px;">
+          <p style="text-align:center; color:var(--text-muted); font-style:italic;">Selecione um livro e capítulo.</p>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:24px; padding-top:16px; border-top:1px solid var(--border);">
+          <button id="btn-ant" type="button" class="btn-nav">← Anterior</button>
+          <button id="btn-prox" type="button" class="btn-nav">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:20px;">
+        <h3>📝 Anotações deste capítulo</h3>
+        <div id="notas"></div>
+        <textarea id="txt-nota" rows="3" placeholder="Escreva sua anotação teológica sobre este capítulo..." style="margin-top:8px;"></textarea>
+        <button id="btn-salvar-nota" type="button" style="margin-top:8px; padding:8px 16px; border:none; background:var(--accent-blue); color:#fff; border-radius:8px; cursor:pointer;">Salvar Anotação</button>
+      </div>
+
+      <div class="panel" style="margin-top:20px;">
+        <h3>🔖 Versículos marcados</h3>
+        <div id="lista-marcados"><div class="marcador-vazio">Nenhum versículo marcado ainda.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel" id="popup-dicionario" style="margin-bottom:20px; display:none;">
+        <h3 style="display:flex; justify-content:space-between; align-items:center;">
+          <span>🔍 Pesquisa rápida</span>
+          <button id="dict-fechar" type="button" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;">✕</button>
+        </h3>
+        <div id="dict-titulo" style="font-size:12px; font-weight:600; color:var(--accent-blue); margin-bottom:8px;">Selecione um texto</div>
+        <div id="dict-conteudo" style="max-height:280px; overflow-y:auto; font-size:13px; line-height:1.5;"></div>
+        <div id="dict-acoes" style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+          <button id="dict-ia" type="button" style="background: var(--accent-purple); color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">✨ Explicar com IA</button>
+          <button id="dict-marcar" type="button" style="background: var(--accent-amber); color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">🔖 Marcar versículo</button>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:20px;">
+        <h3>🔖 Onde parei</h3>
+        <div id="onde-parei-container">
+          <div class="marcador-vazio">Você ainda não marcou nenhum ponto de leitura.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>✨ Assistente IA Teológica</h3>
+        <textarea id="ia-pergunta" rows="3" placeholder="Pergunte algo sobre a Bíblia, teologia, contexto histórico..."></textarea>
+        <button id="btn-ia" type="button" style="width:100%; margin-top:8px; padding:10px; border:none; background:var(--accent-purple); color:#fff; border-radius:8px; cursor:pointer; font-weight:600;">Perguntar à IA</button>
+        <div id="ia-hist" class="ia-hist"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-marcar">
+  <div>
+    <h3 style="margin:0 0 12px;">🔖 Marcar versículo</h3>
+    <p id="modal-ref" style="font-size:14px; color:var(--text-secondary); margin:0 0 12px;"></p>
+    <textarea id="modal-nota" rows="3" placeholder="Anotação opcional sobre este versículo..."></textarea>
+    <div style="display:flex; gap:8px; margin-top:14px;">
+      <button id="modal-cancelar" type="button" style="flex:1; padding:10px; border:1px solid var(--border); background:transparent; color:var(--text-primary); border-radius:8px; cursor:pointer;">Cancelar</button>
+      <button id="modal-salvar" type="button" style="flex:1; padding:10px; border:none; background:var(--accent-amber); color:#fff; border-radius:8px; cursor:pointer; font-weight:600;">Salvar marcação</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-editar">
+  <div>
+    <h3 style="margin:0 0 16px;">✏️ Editar marcação</h3>
+    <div style="display:flex; gap:8px;">
+      <div style="flex:2;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Livro</label>
+        <select id="edit-livro"></select>
+      </div>
+      <div style="flex:1;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Cap.</label>
+        <input type="number" id="edit-capitulo" min="1">
+      </div>
+      <div style="flex:1;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Vers.</label>
+        <input type="number" id="edit-versiculo" min="1">
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Anotação (opcional)</label>
+      <textarea id="edit-nota" rows="4" placeholder="Escreva uma anotação..."></textarea>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:18px;">
+      <button id="edit-cancelar" type="button" style="flex:1; padding:10px; border:1px solid var(--border); background:transparent; color:var(--text-primary); border-radius:8px; cursor:pointer;">Cancelar</button>
+      <button id="edit-salvar" type="button" style="flex:2; padding:10px; border:none; background:var(--accent-blue); color:#fff; border-radius:8px; cursor:pointer; font-weight:600;">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var usuario = null;
+  var fonte = 18;
+  var carregando = false;
+  var selecaoAtual = { texto: '', livro: '', capitulo: 0, versiculo: 0, versiculoFim: 0, variosVersiculos: false };
+  var marcacaoEmEdicao = null;
+
+  var LIVROS = [
+    ["Gênesis","genesis",50],["Êxodo","exodus",40],["Levítico","leviticus",27],
+    ["Números","numbers",36],["Deuteronômio","deuteronomy",34],["Josué","joshua",24],
+    ["Juízes","judges",21],["Rute","ruth",4],["1 Samuel","1samuel",31],
+    ["2 Samuel","2samuel",24],["1 Reis","1kings",22],["2 Reis","2kings",25],
+    ["1 Crônicas","1chronicles",29],["2 Crônicas","2chronicles",36],["Esdras","ezra",10],
+    ["Neemias","nehemiah",13],["Ester","esther",10],["Jó","job",42],
+    ["Salmos","psalms",150],["Provérbios","proverbs",31],["Eclesiastes","ecclesiastes",12],
+    ["Cânticos","songofsolomon",8],["Isaías","isaiah",66],["Jeremias","jeremiah",52],
+    ["Lamentações","lamentations",5],["Ezequiel","ezekiel",48],["Daniel","daniel",12],
+    ["Oseias","hosea",14],["Joel","joel",3],["Amós","amos",9],
+    ["Obadias","obadiah",1],["Jonas","jonah",4],["Miqueias","micah",7],
+    ["Naum","nahum",3],["Habacuque","habakkuk",3],["Sofonias","zephaniah",3],
+    ["Ageu","haggai",2],["Zacarias","zechariah",14],["Malaquias","malachi",4],
+    ["Mateus","matthew",28],["Marcos","mark",16],["Lucas","luke",24],
+    ["João","john",21],["Atos","acts",28],["Romanos","romans",16],
+    ["1 Coríntios","1corinthians",16],["2 Coríntios","2corinthians",13],["Gálatas","galatians",6],
+    ["Efésios","ephesians",6],["Filipenses","philippians",4],["Colossenses","colossians",4],
+    ["1 Tessalonicenses","1thessalonians",5],["2 Tessalonicenses","2thessalonians",3],
+    ["1 Timóteo","1timothy",6],["2 Timóteo","2timothy",4],["Tito","titus",3],
+    ["Filemon","philemon",1],["Hebreus","hebrews",13],["Tiago","james",5],
+    ["1 Pedro","1peter",5],["2 Pedro","2peter",3],["1 João","1john",5],
+    ["2 João","2john",1],["3 João","3john",1],["Judas","jude",1],["Apocalipse","revelation",22]
+  ];
+
+  var DICIONARIO = {
+    "graca": "Favor imerecido de Deus. A salvação é pela graça, não por obras (Ef 2:8-9).",
+    "fe": "Confiar em Deus. 'A fé é a certeza de coisas que se esperam' (Hb 11:1).",
+    "amor": "No grego 'ágape' — amor sacrificial e incondicional. 'Deus prova o seu amor por nós' (Rm 5:8).",
+    "arrependimento": "Do grego 'metanoia' — mudança de mente. Abandonar o pecado e voltar-se para Deus (At 2:38).",
+    "justificacao": "Ato judicial de Deus que declara o pecador justo pela fé em Cristo (Rm 3:24).",
+    "santificacao": "Tornar santo, separar para Deus. Processo de transformação (1 Ts 4:3).",
+    "perdao": "Cancelar a dívida. 'Se confessarmos os nossos pecados, ele é fiel e justo para perdoar' (1 Jo 1:9).",
+    "esperanca": "Expectativa confiante nas promessas de Deus (Rm 5:5).",
+    "pastor": "Metáfora para Deus (Sl 23) e Jesus (Jo 10:11).",
+    "salvacao": "Libertação do pecado. Dom gratuito de Deus (Ef 2:8).",
+    "pecado": "Transgressão da lei de Deus (Rm 3:23).",
+    "ressurreicao": "Voltar à vida após a morte (1 Co 15:17).",
+    "espirito": "Pode referir o Espírito Santo, o Espírito de Deus, ou o espírito humano.",
+    "cordeiro": "Símbolo de sacrifício. 'Cordeiro de Deus que tira o pecado do mundo' (Jo 1:29).",
+    "alianca": "Pacto entre Deus e o homem.",
+    "profeta": "Pessoa chamada por Deus para transmitir sua mensagem.",
+    "discipulo": "Seguidor e aprendiz.",
+    "apostolo": "Enviado com autoridade.",
+    "batismo": "Imersão em água como símbolo de morte e ressurreição com Cristo (Rm 6:4).",
+    "igreja": "Do grego 'ekklesia' — assembleia dos chamados.",
+    "reino": "Reino de Deus — domínio de Deus nos corações e no mundo (Lc 17:21).",
+    "oracao": "Comunicação com Deus.",
+    "louvor": "Expressão de adoração e gratidão a Deus.",
+    "misericordia": "Compaixão de Deus que não nos dá o castigo merecido (Lm 3:22).",
+    "gloria": "A majestade e esplendor de Deus (Rm 3:23).",
+    "cruz": "Instrumento de execução romano. Símbolo central do cristianismo.",
+    "evangelho": "Boas novas. A mensagem da salvação em Jesus Cristo.",
+    "santo": "Separado para Deus.",
+    "idolatria": "Adoração a ídolos ou qualquer coisa que substitua Deus.",
+    "sacrificio": "Oferta a Deus (Hb 10:10).",
+    "templo": "Casa de Deus. O corpo do crente é templo do Espírito Santo (1 Co 6:19).",
+    "messias": "Ungido de Deus. Jesus é o Messias prometido no AT.",
+    "cristo": "Do grego 'Christos' — Ungido. Título de Jesus como Messias.",
+    "senhor": "Autoridade e divindade. 'Jesus é o Senhor' (Rm 10:9).",
+    "verdade": "No grego 'aletheia' — o que é real, não escondido. Jesus disse: 'Eu sou o caminho, a verdade e a vida' (Jo 14:6).",
+    "vida": "No grego 'zoe' — vida espiritual e eterna, distinta de 'bios' (vida física).",
+    "luz": "Símbolo de santidade e revelação divina. 'Eu sou a luz do mundo' (Jo 8:12).",
+    "trevas": "Símbolo do pecado e ignorância espiritual."
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function show(id) { $(id).classList.remove('hidden'); }
+  function hide(id) { $(id).classList.add('hidden'); }
+  function loader(t) { $('loader-txt').innerText = t || 'Carregando...'; $('loader').classList.add('on'); }
+  function unloader() { $('loader').classList.remove('on'); }
+  function acharIndiceLivro(nome) { for (var i=0;i<LIVROS.length;i++) if (LIVROS[i][0]===nome) return i; return -1; }
+  function formataData(iso) {
+    if (!iso) return '';
+    try { var d = new Date(iso);
+      return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    } catch (e) { return iso; }
+  }
+  function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function normalizar(txt) { return String(txt).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+
+  function markdownParaHtml(md) {
+    var html = escapeHtml(md);
+    html = html.replace(/```([\s\S]*?)```/g, function (_, code) {
+      return '<pre style="background:rgba(0,0,0,.06);padding:10px;border-radius:6px;overflow-x:auto;font-size:13px;">' + code.trim() + '</pre>';
+    });
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    html = html.replace(/^### (.+)$/gm, '<h4 style="margin:12px 0 6px;">$1</h4>');
+    html = html.replace(/^## (.+)$/gm, '<h3 style="margin:14px 0 8px;">$1</h3>');
+    html = html.replace(/^# (.+)$/gm, '<h2 style="margin:16px 0 8px;">$1</h2>');
+    html = html.replace(/(?:^|\n)((?:[-*] .+\n?)+)/g, function (_, bloco) {
+      var itens = bloco.trim().split('\n').map(function (l) { return '<li>' + l.replace(/^[-*]\s+/, '') + '</li>'; }).join('');
+      return '<ul style="margin:8px 0;padding-left:20px;">' + itens + '</ul>';
+    });
+    html = html.replace(/(?:^|\n)((?:\d+\. .+\n?)+)/g, function (_, bloco) {
+      var itens = bloco.trim().split('\n').map(function (l) { return '<li>' + l.replace(/^\d+\.\s+/, '') + '</li>'; }).join('');
+      return '<ol style="margin:8px 0;padding-left:20px;">' + itens + '</ol>';
+    });
+    html = html.split(/\n{2,}/).map(function (p) {
+      if (/^\s*<(h\d|ul|ol|pre|blockquote)/.test(p.trim())) return p;
+      return '<p style="margin:8px 0;">' + p.replace(/\n/g, '<br>') + '</p>';
+    }).join('');
+    return html;
+  }
+
+  function aplicarTema(tema) {
+    document.documentElement.setAttribute('data-tema', tema);
+    try { localStorage.setItem('biblia_tema', tema); } catch (e) {}
+    var icone = tema === 'escuro' ? '☀️' : '🌙';
+    if ($('btn-tema')) $('btn-tema').innerText = icone;
+    if ($('btn-tema-auth')) $('btn-tema-auth').innerText = icone;
+  }
+  function alternarTema() {
+    var atual = document.documentElement.getAttribute('data-tema') || 'claro';
+    aplicarTema(atual === 'claro' ? 'escuro' : 'claro');
+  }
+
+  function abaAtiva(qual) {
+    var tl = $('tab-login'), tc = $('tab-cadastro');
+    if (qual === 'login') {
+      tl.classList.add('active'); tc.classList.remove('active');
+      show('form-login'); hide('form-cadastro'); hide('form-recuperacao');
+    } else {
+      tc.classList.add('active'); tl.classList.remove('active');
+      hide('form-login'); show('form-cadastro'); hide('form-recuperacao');
+    }
+  }
+  function mostrarRecuperacao() {
+    hide('form-login'); hide('form-cadastro'); show('form-recuperacao');
+    hide('rec-parte-2');
+  }
+  function voltarLogin() {
+    hide('form-recuperacao'); show('form-login');
+    $('rec-email').value = ''; $('rec-codigo').value = ''; $('rec-nova-senha').value = '';
+  }
+
+  function fazerLogin() {
+    var email = $('login-email').value.trim();
+    var senha = $('login-senha').value;
+    if (!email || !senha) return alert('Preencha e-mail e senha.');
+    $('btn-login').disabled = true; $('btn-login').innerText = 'Entrando...';
+    loader('Autenticando...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        $('btn-login').disabled = false; $('btn-login').innerText = 'Entrar';
+        unloader();
+        if (res && res.status === 'sucesso') entrar(res.usuario);
+        else alert((res && res.mensagem) || 'Erro ao logar.');
+      })
+      .withFailureHandler(function (err) {
+        $('btn-login').disabled = false; $('btn-login').innerText = 'Entrar';
+        unloader(); alert('Erro: ' + err.message);
+      })
+      .loginUsuario(email, senha);
+  }
+
+  function fazerCadastro() {
+    var nome = $('cad-nome').value.trim();
+    var email = $('cad-email').value.trim();
+    var senha = $('cad-senha').value;
+    if (!nome || !email || !senha) return alert('Preencha todos os campos.');
+    if (senha.length < 6) return alert('A senha deve ter pelo menos 6 caracteres.');
+    $('btn-cadastro').disabled = true; $('btn-cadastro').innerText = 'Cadastrando...';
+    loader('Criando sua conta...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        $('btn-cadastro').disabled = false; $('btn-cadastro').innerText = 'Cadastrar e Entrar';
+        unloader();
+        if (res && res.status === 'sucesso') { alert('Cadastro realizado!'); entrar(res.usuario); }
+        else alert((res && res.mensagem) || 'Erro no cadastro.');
+      })
+      .withFailureHandler(function (err) {
+        $('btn-cadastro').disabled = false; $('btn-cadastro').innerText = 'Cadastrar e Entrar';
+        unloader(); alert('Erro: ' + err.message);
+      })
+      .cadastrarUsuario(nome, email, senha);
+  }
+
+  function solicitarCodigo() {
+    var email = $('rec-email').value.trim();
+    if (!email) return alert('Informe seu e-mail.');
+    loader('Enviando código...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        unloader();
+        alert(res.mensagem);
+        if (res.status === 'sucesso') show('rec-parte-2');
+      })
+      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+      .solicitarRecuperacao(email);
+  }
+
+  function redefinirSenha() {
+    var email = $('rec-email').value.trim();
+    var codigo = $('rec-codigo').value.trim();
+    var nova = $('rec-nova-senha').value;
+    if (!codigo || !nova) return alert('Preencha o código e a nova senha.');
+    loader('Redefinindo...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        unloader();
+        if (res.status === 'sucesso') { alert('✅ ' + res.mensagem); voltarLogin(); }
+        else alert(res.mensagem);
+      })
+      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+      .redefinirSenha(email, codigo, nova);
+  }
+
+  function entrar(u) {
+    usuario = u;
+    try { localStorage.setItem('biblia_user', JSON.stringify(u)); } catch (e) {}
+    $('user-info').innerText = 'Conectado como: ' + u.nome;
+    hide('tela-auth'); show('app');
+    initSelects();
+    carregarUltimaMarcacao();
+    carregarVersiculosMarcados();
+  }
+
+  function sair() {
+    if (!confirm('Deseja sair?')) return;
+    try { localStorage.removeItem('biblia_user'); } catch (e) {}
+    usuario = null; location.reload();
+  }
+
+  function initSelects() {
+    var sl = $('sel-livro');
+    sl.innerHTML = '';
+    LIVROS.forEach(function (L, i) {
+      var o = document.createElement('option');
+      o.value = i; o.text = L[0];
+      sl.appendChild(o);
+    });
+    sl.value = 42;
+    trocarLivro(3);
+  }
+
+  function trocarLivro(cap) {
+    var idx = parseInt($('sel-livro').value, 10);
+    var L = LIVROS[idx];
+    var sc = $('sel-cap');
+    sc.innerHTML = '';
+    for (var i = 1; i <= L[2]; i++) {
+      var o = document.createElement('option');
+      o.value = i; o.text = 'Capítulo ' + i;
+      sc.appendChild(o);
+    }
+    sc.value = (cap && cap <= L[2]) ? cap : 1;
+    carregar();
+  }
+
+  function carregar() {
+    if (carregando) return;
+    carregando = true;
+    var idx = parseInt($('sel-livro').value, 10);
+    var L = LIVROS[idx];
+    var cap = parseInt($('sel-cap').value, 10);
+    var versao = $('sel-versao').value;
+    var cont = $('conteudo');
+
+    $('titulo').innerText = L[0] + ' ' + cap;
+    cont.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Carregando...</p>';
+    pararAudio();
+    $('notas').innerHTML = '';
+
+    var url = 'https://bible-api.com/' + encodeURIComponent(L[1]) + '+' + cap + '?translation=' + encodeURIComponent(versao);
+
+    fetch(url)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (d) {
+        if (d.verses && d.verses.length) {
+          cont.innerHTML = '';
+          d.verses.forEach(function (v) {
+            var p = document.createElement('p');
+            p.className = 'verse';
+            p.setAttribute('data-versiculo', v.verse);
+            p.innerHTML = '<span class="n">' + v.verse + '</span>' + v.text.trim() +
+              '<button class="btn-marcar-verso" type="button" title="Marcar v. ' + v.verse + '">🔖</button>';
+            cont.appendChild(p);
+          });
+          cont.querySelectorAll('.btn-marcar-verso').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              var idxL = parseInt($('sel-livro').value, 10);
+              var capL = parseInt($('sel-cap').value, 10);
+              var vL = parseInt(btn.parentNode.getAttribute('data-versiculo'), 10);
+              marcarVersiculoEspecifico(LIVROS[idxL][0], capL, vL);
+            });
+          });
+        } else cont.innerHTML = '<p style="text-align:center;color:#ef4444;">Capítulo não encontrado.</p>';
+      })
+      .catch(function (e) {
+        cont.innerHTML = '<p style="text-align:center;color:#ef4444;">Erro: ' + e.message + '</p>';
+      })
+      .then(function () {
+        carregando = false;
+        atualizaBotoes();
+        carregarNotas();
+        atualizarMarcacoesVisuais();
+      });
+  }
+
+  function atualizaBotoes() {
+    var idx = parseInt($('sel-livro').value, 10);
+    var cap = parseInt($('sel-cap').value, 10);
+    $('btn-ant').disabled = (cap <= 1 && idx === 0);
+    $('btn-prox').disabled = (cap >= LIVROS[idx][2] && idx === LIVROS.length - 1);
+  }
+
+  function navegar(dir) {
+    var cap = parseInt($('sel-cap').value, 10);
+    var idx = parseInt($('sel-livro').value, 10);
+    var novo = cap + dir;
+    if (novo < 1) {
+      if (idx > 0) { $('sel-livro').value = idx - 1; trocarLivro(LIVROS[idx - 1][2]); }
+    } else if (novo > LIVROS[idx][2]) {
+      if (idx < LIVROS.length - 1) { $('sel-livro').value = idx + 1; trocarLivro(1); }
+    } else { $('sel-cap').value = novo; carregar(); }
+  }
+
+  function mudaFonte(d) { fonte = Math.max(12, Math.min(32, fonte + d)); $('conteudo').style.fontSize = fonte + 'px'; }
+
+  function toggleAudio() {
+    if (!('speechSynthesis' in window)) return alert('Navegador não suporta áudio.');
+    if (speechSynthesis.speaking && !speechSynthesis.paused) {
+      speechSynthesis.pause(); $('btn-audio').innerText = '▶ Continuar';
+    } else if (speechSynthesis.paused) {
+      speechSynthesis.resume(); $('btn-audio').innerText = '🔊 Pausar';
+    } else {
+      var u = new SpeechSynthesisUtterance($('conteudo').innerText);
+      u.lang = 'pt-BR';
+      u.onend = function () { $('btn-audio').innerText = '🔊 Ouvir'; };
+      speechSynthesis.speak(u);
+      $('btn-audio').innerText = '🔊 Pausar';
+    }
+  }
+  function pararAudio() { if ('speechSynthesis' in window) { speechSynthesis.cancel(); $('btn-audio').innerText = '🔊 Ouvir'; } }
+
+  function marcar() {
+    if (!usuario) return alert('Faça login primeiro.');
+    var idx = parseInt($('sel-livro').value, 10);
+    var cap = parseInt($('sel-cap').value, 10);
+    var ref = LIVROS[idx][0] + ' ' + cap;
+    loader('Marcando ' + ref + '...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        unloader();
+        if (res.status === 'sucesso') {
+          alert('🔖 Marcado: ' + ref);
+          carregarUltimaMarcacao();
+          carregarVersiculosMarcados();
+        } else alert('❌ ' + (res.mensagem || 'Erro'));
+      })
+      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+      .salvarMarcacao(usuario.id, LIVROS[idx][0], cap, 1);
+  }
+
+  function marcarVersiculoEspecifico(livro, capitulo, versiculo) {
+    if (!usuario) return alert('Faça login primeiro.');
+    var ref = livro + ' ' + capitulo + ':' + versiculo;
+    var nota = prompt('🔖 Marcar ' + ref + '\n\nQuer adicionar uma anotação? (opcional)');
+    if (nota === null) return;
+    loader('Marcando ' + ref + '...');
+    google.script.run
+      .withSuccessHandler(function (res) {
+        unloader();
+        if (res.status === 'sucesso') {
+          if (nota && nota.trim()) {
+            google.script.run.salvarAnotacao(usuario.id, livro, capitulo, versiculo, nota.trim());
+          }
+          carregarVersiculosMarcados();
+          carregarUltimaMarcacao();
+          atualizarMarcacoesVisuais();
+          carregarNotas();
+        } else alert('❌ ' + (res.mensagem || 'Erro'));
+      })
+      .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+      .salvarMarcacao(usuario.id, livro, capitulo, versiculo);
+  }
+
+  function atualizarMarcacoesVisuais() {
+    if (!usuario) return;
+    var idx = parseInt($('sel-livro').value, 10);
+    var cap = parseInt($('sel-cap').value, 10);
+    var livro = LIVROS[idx][0];
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (!res || res.status !== 'sucesso' || !res.dados) return;
+        var marcados = {};
+        res.dados.forEach(function (m) {
+          if (m.livro === livro && parseInt(m.capitulo, 10) === cap && m.versiculo) {
+            marcados[parseInt(m.versiculo, 10)] = true;
+          }
+        });
+        document.querySelectorAll('#conteudo .verse').forEach(function (el) {
+          el.classList.remove('ja-marcado');
+          var v = parseInt(el.getAttribute('data-versiculo'), 10);
+          if (marcados[v]) el.classList.add('ja-marcado');
+        });
+      })
+      .listarProgresso(usuario.id);
+  }
+
+  function carregarUltimaMarcacao() {
+    if (!usuario) return;
+    google.script.run
+      .withSuccessHandler(function (res) {
+        var cont = $('onde-parei-container');
+        if (!res || res.status !== 'sucesso' || !res.dados) {
+          cont.innerHTML = '<div class="marcador-vazio">Você ainda não marcou nenhum ponto de leitura.</div>';
+          return;
+        }
+        var m = res.dados;
+        var ref = m.livro + ' ' + m.capitulo + (m.versiculo ? ':' + m.versiculo : '');
+        cont.innerHTML =
+          '<div class="marcador-card">' +
+            '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">' +
+              '<div style="flex:1;">' +
+                '<div class="label">📖 Última leitura</div>' +
+                '<div class="ref">' + ref + '</div>' +
+                '<div class="ref-small">' + m.livro + ' — Cap. ' + m.capitulo + (m.versiculo ? ', v. ' + m.versiculo : '') + '</div>' +
+                '<div class="data">Marcado em ' + formataData(m.atualizado_em || m.created_at) + '</div>' +
+              '</div>' +
+              '<button id="btn-del-ultima" type="button" title="Excluir" class="btn-acao-mini">🗑️</button>' +
+            '</div>' +
+          '</div>' +
+          '<button class="btn-ir" id="btn-ir-marcador">▶ Continuar de onde parei</button>';
+        setTimeout(function () {
+          $('btn-ir-marcador').onclick = function () { irParaMarcacao(m); };
+          $('btn-del-ultima').onclick = function () {
+            if (!confirm('Excluir a marcação ' + ref + '?')) return;
+            loader('Excluindo...');
+            google.script.run
+              .withSuccessHandler(function (r) {
+                unloader();
+                if (r.status === 'sucesso') {
+                  carregarUltimaMarcacao();
+                  carregarVersiculosMarcados();
+                  atualizarMarcacoesVisuais();
+                } else alert('Erro: ' + (r.mensagem || ''));
+              })
+              .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+              .excluirMarcacao(m.id);
+          };
+        }, 0);
+      })
+      .withFailureHandler(function () {
+        $('onde-parei-container').innerHTML = '<div class="marcador-vazio">Erro ao carregar marcação.</div>';
+      })
+      .ultimaMarcacao(usuario.id);
+  }
+
+  function irParaMarcacao(m) {
+    var idx = acharIndiceLivro(m.livro);
+    if (idx < 0) return alert('Livro não encontrado.');
+    $('sel-livro').value = idx;
+    var sc = $('sel-cap');
+    sc.innerHTML = '';
+    for (var i = 1; i <= LIVROS[idx][2]; i++) {
+      var o = document.createElement('option');
+      o.value = i; o.text = 'Capítulo ' + i;
+      sc.appendChild(o);
+    }
+    sc.value = m.capitulo;
+    carregar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function carregarVersiculosMarcados() {
+    if (!usuario) return;
+    var lista = $('lista-marcados');
+    lista.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">Carregando...</div>';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (!res || res.status !== 'sucesso' || !res.dados || res.dados.length === 0) {
+          lista.innerHTML = '<div class="marcador-vazio">Nenhum versículo marcado ainda.</div>';
+          return;
+        }
+        lista.innerHTML = '';
+        res.dados.slice(0, 15).forEach(function (m) {
+          var div = document.createElement('div');
+          div.className = 'marcador-card';
+          div.innerHTML =
+            '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">' +
+              '<div style="flex:1; cursor:pointer;" class="marcador-corpo">' +
+                '<div class="label">📖 ' + m.livro + '</div>' +
+                '<div class="ref">' + m.capitulo + (m.versiculo ? ':' + m.versiculo : '') + '</div>' +
+                '<div class="data">' + formataData(m.atualizado_em || m.created_at) + '</div>' +
+              '</div>' +
+              '<div style="display:flex; gap:4px; flex-shrink:0;">' +
+                '<button class="btn-edit-marc btn-acao-mini" type="button" title="Editar">✏️</button>' +
+                '<button class="btn-del-marc btn-acao-mini" type="button" title="Excluir">🗑️</button>' +
+              '</div>' +
+            '</div>';
+          div.querySelector('.marcador-corpo').onclick = function () { irParaMarcacao(m); };
+          div.querySelector('.btn-edit-marc').onclick = function (e) { e.stopPropagation(); abrirModalEditar(m); };
+          div.querySelector('.btn-del-marc').onclick = function (e) {
+            e.stopPropagation();
+            var ref = m.livro + ' ' + m.capitulo + (m.versiculo ? ':' + m.versiculo : '');
+            if (!confirm('Excluir a marcação ' + ref + '?')) return;
+            loader('Excluindo...');
+            google.script.run
+              .withSuccessHandler(function (r) {
+                unloader();
+                if (r.status === 'sucesso') {
+                  carregarVersiculosMarcados();
+                  carregarUltimaMarcacao();
+                  atualizarMarcacoesVisuais();
+                } else alert('Erro: ' + (r.mensagem || ''));
+              })
+              .withFailureHandler(function (err) { unloader(); alert('Erro: ' + err.message); })
+              .excluirMarcacao(m.id);
+          };
+          lista.appendChild(div);
+        });
+      })
+      .withFailureHandler(function () {
+        lista.innerHTML = '<div class="marcador-vazio">Erro ao carregar.</div>';
+      })
+      .listarProgresso(usuario.id);
+  }
+
+  function preencherSelectLivrosEdit() {
+    var sel = $('edit-livro');
+    if (sel.options.length > 0) return;
+    LIVROS.forEach(function (L) {
+      var o = document.createElement('option');
+      o.value = L[0];
+      o.text = L[0];
+      sel.appendChild(o);
+    });
+  }
+
+  function abrirModalEditar(m) {
+    marcacaoEmEdicao = m;
+    preencherSelectLivrosEdit();
+    $('edit-livro').value = m.livro;
+    $('edit-capitulo').value = m.capitulo;
+    $('edit-versiculo').value = m.versiculo || '';
+    $('edit-nota').value = '';
+    $('modal-editar').style.display = 'flex';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (res.status === 'sucesso' && res.dados && res.dados.length > 0) {
+          $('edit-nota').value = res.dados[0].texto || '';
+          marcacaoEmEdicao._anotacaoId = res.dados[0].id;
+        }
+      })
+      .listarAnotacoesFiltradas(usuario.id, m.livro, m.capitulo, m.versiculo);
+  }
+
+  function fecharModalEditar() {
+    $('modal-editar').style.display = 'none';
+    marcacaoEmEdicao = null;
+  }
+
+  function salvarEdicao() {
+    if (!marcacaoEmEdicao) return;
+    var livro = $('edit-livro').value;
+    var cap = parseInt($('edit-capitulo').value, 10);
+    var vers = parseInt($('edit-versiculo').value, 10) || null;
+    var nota = $('edit-nota').value.trim();
+    if (!livro || !cap) return alert('Livro e capítulo são obrigatórios.');
+    var btn = $('edit-salvar');
+    btn.disabled = true; btn.innerText = 'Salvando...';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (res.status !== 'sucesso') {
+          btn.disabled = false; btn.innerText = 'Salvar alterações';
+          return alert('Erro ao salvar: ' + (res.mensagem || ''));
+        }
+        var finalizar = function () {
+          btn.disabled = false; btn.innerText = 'Salvar alterações';
+          fecharModalEditar();
+          carregarVersiculosMarcados();
+          carregarUltimaMarcacao();
+          atualizarMarcacoesVisuais();
+          carregarNotas();
+          alert('✅ Marcação atualizada!');
+        };
+        var lidarNota = function () {
+          if (!nota) {
+            if (marcacaoEmEdicao._anotacaoId) google.script.run.excluirAnotacao(marcacaoEmEdicao._anotacaoId);
+            finalizar();
+            return;
+          }
+          if (marcacaoEmEdicao._anotacaoId) {
+            google.script.run.withSuccessHandler(finalizar).editarAnotacao(marcacaoEmEdicao._anotacaoId, nota);
+          } else {
+            google.script.run.withSuccessHandler(finalizar).salvarAnotacao(usuario.id, livro, cap, vers, nota);
+          }
+        };
+        lidarNota();
+      })
+      .withFailureHandler(function (err) {
+        btn.disabled = false; btn.innerText = 'Salvar alterações';
+        alert('Erro: ' + err.message);
+      })
+      .editarMarcacao(marcacaoEmEdicao.id, livro, cap, vers);
+  }
+
+  function salvarNota() {
+    var txt = $('txt-nota').value.trim();
+    if (!txt) return alert('Escreva algo.');
+    if (!usuario) return;
+    var idx = parseInt($('sel-livro').value, 10);
+    var cap = parseInt($('sel-cap').value, 10);
+    var btn = $('btn-salvar-nota');
+    btn.disabled = true; btn.innerText = 'Salvando...';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        btn.disabled = false; btn.innerText = 'Salvar Anotação';
+        if (res.status === 'sucesso') { $('txt-nota').value = ''; carregarNotas(); }
+        else alert('Erro: ' + (res.mensagem || ''));
+      })
+      .withFailureHandler(function (err) {
+        btn.disabled = false; btn.innerText = 'Salvar Anotação';
+        alert('Erro: ' + err.message);
+      })
+      .salvarAnotacao(usuario.id, LIVROS[idx][0], cap, 1, txt);
+  }
+
+  function carregarNotas() {
+    if (!usuario) return;
+    var idx = parseInt($('sel-livro').value, 10);
+    var cap = parseInt($('sel-cap').value, 10);
+    $('notas').innerHTML = '';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (!res || res.status !== 'sucesso' || !res.dados) return;
+        res.dados
+          .filter(function (a) { return a.livro === LIVROS[idx][0] && parseInt(a.capitulo, 10) === cap; })
+          .forEach(function (a) {
+            var d = document.createElement('div');
+            d.className = 'note';
+            d.innerHTML = escapeHtml(a.texto) + '<div class="meta">' + formataData(a.created_at || a.atualizado_em) + '</div>';
+            $('notas').appendChild(d);
+          });
+      })
+      .listarAnotacoes(usuario.id);
+  }
+
+  function perguntaIA() {
+    var p = $('ia-pergunta').value.trim();
+    if (!p) return alert('Digite uma pergunta.');
+    var hist = $('ia-hist');
+    var bloco = document.createElement('div');
+    bloco.className = 'ia-resposta';
+    bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>⏳ Consultando...';
+    hist.insertBefore(bloco, hist.firstChild);
+    $('ia-pergunta').value = '';
+    $('btn-ia').disabled = true; $('btn-ia').innerText = 'Consultando...';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        $('btn-ia').disabled = false; $('btn-ia').innerText = 'Perguntar à IA';
+        if (res.status === 'sucesso') bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>' + markdownParaHtml(res.resposta);
+        else bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>⚠️ Erro: ' + escapeHtml(res.resposta);
+      })
+      .withFailureHandler(function (err) {
+        $('btn-ia').disabled = false; $('btn-ia').innerText = 'Perguntar à IA';
+        bloco.innerHTML = '<span class="pergunta">❓ ' + escapeHtml(p) + '</span>⚠️ Erro: ' + escapeHtml(err.message);
+      })
+      .consultarIA(p);
+  }
+
+  function lidarSelecao() {
+    var sel = window.getSelection();
+    var texto = sel.toString().trim();
+    if (!texto || texto.length < 2) return;
+    var range = sel.getRangeAt(0);
+    var versiculosSelecionados = [];
+    document.querySelectorAll('#conteudo .verse').forEach(function (el) {
+      if (range.intersectsNode(el)) {
+        var v = parseInt(el.getAttribute('data-versiculo'), 10);
+        if (!isNaN(v)) versiculosSelecionados.push(v);
+      }
+    });
+    var vIni = versiculosSelecionados.length ? versiculosSelecionados[0] : 0;
+    var vFim = versiculosSelecionados.length ? versiculosSelecionados[versiculosSelecionados.length - 1] : 0;
+    var idx = parseInt($('sel-livro').value, 10);
+    selecaoAtual = {
+      texto: texto,
+      livro: LIVROS[idx][0],
+      capitulo: parseInt($('sel-cap').value, 10),
+      versiculo: vIni,
+      versiculoFim: vFim,
+      variosVersiculos: vIni !== vFim
+    };
+    var chave = normalizar(texto);
+    var significado = DICIONARIO[chave];
+    if (!significado) {
+      var palavras = chave.split(/\s+/);
+      for (var i = 0; i < palavras.length; i++) {
+        var p = palavras[i].replace(/[.,;:!?]/g, '');
+        if (DICIONARIO[p]) { significado = DICIONARIO[p]; break; }
+      }
+    }
+    var tituloRef = selecaoAtual.variosVersiculos
+      ? selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + vIni + '-' + vFim
+      : selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + vIni;
+    $('dict-titulo').innerText = '📖 ' + tituloRef;
+    if (significado) {
+      $('dict-conteudo').innerHTML =
+        '<div style="font-weight:bold;color:var(--accent-blue);margin-bottom:6px;text-transform:capitalize;">' + escapeHtml(texto) + '</div>' +
+        '<div>' + significado + '</div>';
+    } else {
+      $('dict-conteudo').innerHTML =
+        '<div style="font-style:italic;color:var(--text-muted);">' +
+        'Nenhuma definição local para "<strong>' + escapeHtml(texto) + '</strong>". ' +
+        'Clique em <strong>✨ Explicar com IA</strong> para uma análise teológica.</div>';
+    }
+    var btnMarcar = $('dict-marcar');
+    btnMarcar.innerText = selecaoAtual.variosVersiculos
+      ? '🔖 Marcar v. ' + vIni + '-' + vFim
+      : '🔖 Marcar v. ' + vIni;
+    $('popup-dicionario').style.display = 'block';
+  }
+
+  function esconderPopupDict() {
+    var p = $('popup-dicionario');
+    if (p) p.style.display = 'none';
+  }
+
+  function explicarComIA() {
+    var termo = selecaoAtual.texto;
+    if (!termo) return;
+    $('dict-conteudo').innerHTML = '⏳ Consultando a IA...';
+    $('dict-ia').disabled = true;
+    var contexto = '';
+    var sel = window.getSelection();
+    if (sel.anchorNode) {
+      var n = sel.anchorNode;
+      while (n && n.nodeType !== 1) n = n.parentNode;
+      while (n && !(n.classList && n.classList.contains('verse'))) n = n.parentNode;
+      if (n) contexto = n.innerText;
+    }
+    google.script.run
+      .withSuccessHandler(function (res) {
+        $('dict-ia').disabled = false;
+        if (res.status === 'sucesso') $('dict-conteudo').innerHTML = '<div>' + markdownParaHtml(res.resposta) + '</div>';
+        else $('dict-conteudo').innerHTML = '⚠️ Erro: ' + escapeHtml(res.resposta);
+      })
+      .withFailureHandler(function (err) {
+        $('dict-ia').disabled = false;
+        $('dict-conteudo').innerHTML = '⚠️ Erro: ' + escapeHtml(err.message);
+      })
+      .explicarTermo(termo, contexto);
+  }
+
+  function abrirModalMarcar() {
+    if (!usuario) return alert('Faça login primeiro.');
+    var vIni = selecaoAtual.versiculo || 1;
+    var vFim = selecaoAtual.versiculoFim || vIni;
+    var ref = selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + (vIni === vFim ? vIni : vIni + '-' + vFim);
+    $('modal-ref').innerText = ref + ' — "' + selecaoAtual.texto + '"';
+    $('modal-nota').value = '';
+    $('modal-marcar').style.display = 'flex';
+    esconderPopupDict();
+  }
+
+  function fecharModalMarcar() { $('modal-marcar').style.display = 'none'; }
+
+  function salvarMarcacaoVersiculo() {
+    if (!usuario) return alert('Faça login primeiro.');
+    var nota = $('modal-nota').value.trim();
+    var vIni = selecaoAtual.versiculo || 1;
+    var vFim = selecaoAtual.versiculoFim || vIni;
+    var btn = $('modal-salvar');
+    btn.disabled = true; btn.innerText = 'Salvando...';
+    var versiculos = [];
+    for (var i = vIni; i <= vFim; i++) versiculos.push(i);
+    var pendentes = versiculos.length;
+    var erros = [];
+    function finalizar() {
+      pendentes--;
+      if (pendentes > 0) return;
+      btn.disabled = false; btn.innerText = 'Salvar marcação';
+      if (erros.length) alert('Erros: ' + erros.join(', '));
+      else {
+        fecharModalMarcar();
+        carregarVersiculosMarcados();
+        carregarUltimaMarcacao();
+        atualizarMarcacoesVisuais();
+        if (nota) google.script.run.salvarAnotacao(usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, vIni, nota);
+        var ref = selecaoAtual.livro + ' ' + selecaoAtual.capitulo + ':' + (vIni === vFim ? vIni : vIni + '-' + vFim);
+        alert('🔖 Marcado: ' + ref);
+      }
+    }
+    versiculos.forEach(function (v) {
+      google.script.run
+        .withSuccessHandler(function (res) { if (res.status !== 'sucesso') erros.push('v.' + v); finalizar(); })
+        .withFailureHandler(function () { erros.push('v.' + v); finalizar(); })
+        .salvarMarcacao(usuario.id, selecaoAtual.livro, selecaoAtual.capitulo, v);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    try { aplicarTema(localStorage.getItem('biblia_tema') || 'claro'); }
+    catch (e) { aplicarTema('claro'); }
+    if ($('btn-tema')) $('btn-tema').onclick = alternarTema;
+    if ($('btn-tema-auth')) $('btn-tema-auth').onclick = alternarTema;
+    $('tab-login').onclick = function () { abaAtiva('login'); };
+    $('tab-cadastro').onclick = function () { abaAtiva('cadastro'); };
+    $('btn-login').onclick = fazerLogin;
+    $('btn-cadastro').onclick = fazerCadastro;
+    $('btn-esqueci').onclick = mostrarRecuperacao;
+    $('btn-voltar-login').onclick = voltarLogin;
+    $('btn-solicitar-codigo').onclick = solicitarCodigo;
+    $('btn-redefinir').onclick = redefinirSenha;
+    $('btn-sair').onclick = sair;
+    $('btn-a-mais').onclick = function () { mudaFonte(2); };
+    $('btn-a-menos').onclick = function () { mudaFonte(-2); };
+    $('btn-audio').onclick = toggleAudio;
+    $('btn-ia').onclick = perguntaIA;
+    $('btn-marcar').onclick = marcar;
+    $('btn-salvar-nota').onclick = salvarNota;
+    $('btn-ant').onclick = function () { navegar(-1); };
+    $('btn-prox').onclick = function () { navegar(1); };
+    $('sel-livro').onchange = function () { trocarLivro(1); };
+    $('sel-cap').onchange = carregar;
+    $('sel-versao').onchange = carregar;
+    var cont = $('conteudo');
+    if (cont) cont.addEventListener('mouseup', function () { setTimeout(lidarSelecao, 10); });
+    $('dict-fechar').onclick = esconderPopupDict;
+    $('dict-ia').onclick = explicarComIA;
+    $('dict-marcar').onclick = abrirModalMarcar;
+    $('modal-cancelar').onclick = fecharModalMarcar;
+    $('modal-salvar').onclick = salvarMarcacaoVersiculo;
+    $('edit-cancelar').onclick = fecharModalEditar;
+    $('edit-salvar').onclick = salvarEdicao;
+    try {
+      var s = localStorage.getItem('biblia_user');
+      if (s) { var u = JSON.parse(s); if (u && u.id) entrar(u); }
+    } catch (e) {}
+    console.log('✅ BÍBLIA - SILVA XVI carregada com PWA e logo');
+  });
+})();
+</script>
+</body>
+</html>
